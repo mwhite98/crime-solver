@@ -1,0 +1,10 @@
+{"name":"crime_all_years","type":"FeatureCollection"
+,"crs":{"type":"name","properties":{"name":"EPSG:26910"}}
+,"features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[490625.096643,5457014.37467]},"properties":{"TYPE":"Break and Enter Residential/Other","YEAR":2018,"MONTH":"05","DAY":"04","HOUR":"05","MINUTE":"46","HUNDRED_BLOCK":"22XX SPRUCE ST","NEIGHBOURHOOD":"Fairview","X":490625.1,"Y":5457014.37}}
+,{"type":"Feature","geometry":{"type":"Point","coordinates":[491265.719229,5459000.43829]},"properties":{"TYPE":"Theft from Vehicle","YEAR":2018,"MONTH":"06","DAY":"18","HOUR":"10","MINUTE":"30","HUNDRED_BLOCK":"7XX HORNBY ST","NEIGHBOURHOOD":"Central Business District","X":491265.72,"Y":5459000.44}}
+,{"type":"Feature","geometry":{"type":"Point","coordinates":[497148.008477,5452145.67217]},"properties":{"TYPE":"Mischief","YEAR":2018,"MONTH":"03","DAY":"20","HOUR":"18","MINUTE":"00","HUNDRED_BLOCK":"31XX E 52ND AVE","NEIGHBOURHOOD":"Killarney","X":497148.01,"Y":5452145.67}}
+,{"type":"Feature","geometry":{"type":"Point","coordinates":[491645.642333,5459110.62205]},"properties":{"TYPE":"Other Theft","YEAR":2018,"MONTH":"02","DAY":"06","HOUR":"16","MINUTE":"40","HUNDRED_BLOCK":"4XX GRANVILLE ST","NEIGHBOURHOOD":"Central Business District","X":491645.64,"Y":5459110.62}}
+,{"type":"Feature","geometry":{"type":"Point","coordinates":[485679.2024,5454739.2642]},"properties":{"TYPE":"Homicide","YEAR":2018,"MONTH":"09","DAY":"20","HOUR":"18","MINUTE":"40","HUNDRED_BLOCK":"CAMOSUN ST / W 30TH AVE","NEIGHBOURHOOD":"Dunbar-Southlands","X":485679.2,"Y":5454739.26}}
+,{"type":"Feature","geometry":{"type":"Point","coordinates":[493255.047026,5458093.50062]},"properties":{"TYPE":"Mischief","YEAR":2018,"MONTH":"04","DAY":"09","HOUR":"00","MINUTE":"00","HUNDRED_BLOCK":"6XX MALKIN AVE","NEIGHBOURHOOD":"Strathcona","X":493255.05,"Y":5458093.5}}
+]}
