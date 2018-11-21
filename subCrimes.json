@@ -7,4 +7,4 @@
 ,{"type":"Feature","geometry":{"type":"Point","coordinates":[491645.642333,5459110.62205]},"properties":{"TYPE":"Other Theft","YEAR":2018,"MONTH":"02","DAY":"06","HOUR":"16","MINUTE":"40","HUNDRED_BLOCK":"4XX GRANVILLE ST","NEIGHBOURHOOD":"Central Business District","X":491645.64,"Y":5459110.62}}
 ,{"type":"Feature","geometry":{"type":"Point","coordinates":[485679.2024,5454739.2642]},"properties":{"TYPE":"Homicide","YEAR":2018,"MONTH":"09","DAY":"20","HOUR":"18","MINUTE":"40","HUNDRED_BLOCK":"CAMOSUN ST / W 30TH AVE","NEIGHBOURHOOD":"Dunbar-Southlands","X":485679.2,"Y":5454739.26}}
 ,{"type":"Feature","geometry":{"type":"Point","coordinates":[493255.047026,5458093.50062]},"properties":{"TYPE":"Mischief","YEAR":2018,"MONTH":"04","DAY":"09","HOUR":"00","MINUTE":"00","HUNDRED_BLOCK":"6XX MALKIN AVE","NEIGHBOURHOOD":"Strathcona","X":493255.05,"Y":5458093.5}}
-]}
+]}.
