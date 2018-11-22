@@ -4,12 +4,11 @@
 %
 % Given 6 crimes, taken from the City of Vancouvers Open Data Catalogue of crimes from 2018,
 % will determine which of the 10 suspects committed each crime. 
-% 
+
+% ==================================================================================== %
+
 % Suspect statements:
 
-% NOT QUITE DONE YET - HAVE NECESSARY MATERIAL BUT GOING TO FLUSH OUT TO BE MORE SNEAKY
-
-%
 % Alder:
 % Ive never committed a crime in my life and theres no way Id start now; 
 % I saw Juniper and Fern driving around the Central Business District that day though.
@@ -76,10 +75,12 @@ testimony(g, suspectToken(g, cakeCrumbs)).
 
 % Holly:
 % The victim and I were great friends, Im so sorry this happened to them. Maybe you should
-% ask Iris, I know she and the victim had some bad blood between them.
+% ask Iris, I know she and the victim had some bad blood between them. I saw her that day too,
+% and she had dirt all over her hands. So gross.
 
 testimony(h, friend(h)).
 testimony(h, enemy(i)).
+testimony(h, suspectToken(i, dirtyFingerPrints)).
 
 % Iris:
 % I have no idea what you guys are talking about. I was out of town when it happened,
@@ -89,19 +90,23 @@ claimedLocation(i, i, outOfTown).
 testimony(i, stranger(i)).
 
 % Juniper:
-% I make way too much to do something petty like that. I saw Iris that day though, but I didnt
-% say hi because her hands were so dirty and I didnt want to hug her.
+% I bet it was Erica. Shes always threatening to do something like that, you know how money 
+% troubles makes people do extreme things. I make way too much to do something petty like that. 
 
 testimony(j, rich(j)).
-testimony(j, suspectToken(i, dirtyFingerPrints)).
-
-
+testimony(j, poor(e)).
+testimony(j, temper(e)).
 
 % All of the suspects
-suspects([alder, briar, cherry, daisy, erica, fern, ginger, holly, iris, juniper]).
+% suspects([alder, briar, cherry, daisy, erica, fern, ginger, holly, iris, juniper]).
+suspects([a, b, c, d, e, f, g, h, i, j]).
+
+% ==================================================================================== %
+
+% Background knowledge on crime and testimonies
 
 % What it means for a piece of a testimony to be inconsistent
-inconsistent(rich(X), poor(x)).
+inconsistent(rich(X), poor(X)).
 inconsistent(cleanRecord(X), priorConvict(X)).
 inconsistent(friend(X), enemy(X)).
 inconsistent(friend(X), stranger(X)).
@@ -116,16 +121,35 @@ crimeSceneEvidence(crime4, skiPoles).
 crimeSceneEvidence(crime5, faceMask).
 crimeSceneEvidence(crime6, dirtyFingerPrints).
 
-% Outline of all crimes, and all conditions that must be true to have committed them.
+% ==================================================================================== %
 
-% THIS IS NOT RIGHT NOR WILL IT WORK AT ALL WITH ABOVE TESTIMONIES
+% Functions to evaluate evidence, testimonies, and verdict
 
-% Break and Enter Residential/Other, Fairview, May 4th 2018
-% S is suspect, L is location of crime, V is victim
-guilty(crime1, S, L, V) :- 
-	suspectLocation(S, L), 
-	poor(S), 
-	stranger(S, V), 
-	crimeSceneEvidence(crime1, E),
-	suspectToken(S, E),
+% The right location of the suspect. Compares various testified locations of a suspect, 
+% and determines which one is correct based on having a consistent testimony.
+
+% Determines whether the actual location of the suspect matches the scene of the crime
+% Does NOT avaluate to true if suspect has a consistent testimony. If a suspects testimony
+% is consistent, we dont really care about where they were.
+suspectLocation(C, S) :-
+	member(S, suspects),		% S and T are both suspects
+	member(T, suspects),
+	S \= T,						% S and T are two different suspects
+	inconsistentTestimony(S),
+	claimedLocation(T, S, C).
+
+% Determines whether the evidence found at the crime is associated with the suspects
+evidenceMatchesToken(C, S) :-
+
+% Determines whether or not the suspects testimony is inconsistent.
+inconsistentTestimony(S) :-
+
+% Determines whether or nor the suspects testimony is consistent.
+consistentTestimony(S) :- \+ inconsistentTestimony(S).
+
+% Determines whether or not a suspect committed a crime
+% Parameters: C is the crime suspect is accused of, S is the suspect
+guilty(C, S) :-
+	suspectLocation(C, S),
+	evidenceMatchesToken(C, S),
 	inconsistentTestimony(S).
