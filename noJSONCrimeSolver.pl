@@ -1,9 +1,21 @@
 % Based off of Anniepoos "detectivepuzzle" and "newdetective" programs.
 % https://github.com/Anniepoo/prolog-examples/blob/master/newdetective.pl
 % https://github.com/Anniepoo/prolog-examples/blob/master/detectivepuzzle.pl
+% Specifically, ideas for inconsistency, friend/enemy/stranger
 %
 % Given 6 crimes, taken from the City of Vancouvers Open Data Catalogue of crimes from 2018,
 % will determine which of the 10 suspects committed each crime. 
+
+% ==================================================================================== %
+
+% Outline of crimes
+
+% crime1: Break and Enter Residential/Other
+% crime2: Theft from Vehicle
+% crime3: Mischief
+% crime4: Other Theft
+% crime5: Homicide
+% crime6: Mischief
 
 % ==================================================================================== %
 
@@ -45,12 +57,13 @@ testimony(d, temper(h)).
 testimony(d, suspectToken(d, hikingBootPrints)).
 
 % Erica:
-% If you ask me, it was either Cherry or Briar. Theyre both always hanging around Killarney,
-% and they both already have a criminal record.
+% If you ask me, it was either Cherry or Holly, they both already have a criminal record. I
+% know Cherrys always hanging around Killarney too. Come to think of it though, I rode the 
+% bus with Holly that day around Dunbar. Where did you say the crime happened again?
 
-claimedLocation(e, b, killarney).
-claimedLocation(e, g, killarney).
-testimony(e, priorConvict(b)).
+claimedLocation(e, h, dunbarSouthlands).
+claimedLocation(e, c, killarney).
+testimony(e, priorConvict(h)).
 testimony(e, priorConvict(g)).
 
 % Fern:
@@ -65,11 +78,11 @@ testimony(f, suspectToken(j, redScarf)).
 testimony(f, temper(f)).
 
 % Ginger:
-% I promise I didnt do it, and I dont think Cherry couldve done it either. I ran into her
-% at the bakery in Killarney that day, she was trying a bunch of different cakes for her 
+% I promise I didnt do it, and I dont think Daisy couldve done it either. I ran into her
+% at the bakery in Fairview that day, she was trying a bunch of different cakes for her 
 % wedding. 
 
-claimedLocation(g, c, killarney).
+claimedLocation(g, d, fairview).
 testimony(g, suspectToken(c, cakeCrumbs)).
 testimony(g, suspectToken(g, cakeCrumbs)).
 
@@ -91,11 +104,14 @@ testimony(i, stranger(i)).
 
 % Juniper:
 % I bet it was Erica. Shes always threatening to do something like that, you know how money 
-% troubles makes people do extreme things. I make way too much to do something petty like that. 
+% troubles makes people do extreme things. I make way too much to do something petty like that,
+% and I was out having a fantastic day with Fern. 
 
 testimony(j, rich(j)).
 testimony(j, poor(e)).
 testimony(j, temper(e)).
+testimony(j, calm(f)).
+testimony(j, calm(f)).
 
 % All of the suspects
 % suspects([alder, briar, cherry, daisy, erica, fern, ginger, holly, iris, juniper]).
@@ -107,11 +123,17 @@ suspects([a, b, c, d, e, f, g, h, i, j]).
 
 % What it means for a piece of a testimony to be inconsistent
 inconsistent(rich(X), poor(X)).
+inconsistent(poor(X), rich(X)).
 inconsistent(cleanRecord(X), priorConvict(X)).
+inconsistent(priorConvict(X), cleanRecord(X)).
 inconsistent(friend(X), enemy(X)).
+inconsistent(enemy(X), friend(X)).
 inconsistent(friend(X), stranger(X)).
+inconsistent(stranger(X), friend(X)).
 inconsistent(enemy(X), stranger(X)).
+inconsistent(stranger(X), enemy(X)).
 inconsistent(temper(X), calm(X)).
+inconsistent(calm(X), temper(X)).
 
 % Evidence found at scene of each crime.
 crimeSceneEvidence(crime1, hikingBootPrints).
@@ -121,28 +143,51 @@ crimeSceneEvidence(crime4, skiPoles).
 crimeSceneEvidence(crime5, faceMask).
 crimeSceneEvidence(crime6, dirtyFingerPrints).
 
+% Location of each crime 
+% TO BE REPLACED WITH PARSED DATA ?????
+location(crime1, fairview).
+location(crime2, centralBusinessDistrict).
+location(crime3, killarney).
+location(crime4, centralBusinessDistrict).
+location(crime5, dunbarSouthlands).
+location(crime6, strathcona).
+
 % ==================================================================================== %
 
 % Functions to evaluate evidence, testimonies, and verdict
 
-% The right location of the suspect. Compares various testified locations of a suspect, 
-% and determines which one is correct based on having a consistent testimony.
+% Determines if a person is a suspect
+inList(X) :- suspects(L), member(X, L).
 
 % Determines whether the actual location of the suspect matches the scene of the crime
 % Does NOT avaluate to true if suspect has a consistent testimony. If a suspects testimony
 % is consistent, we dont really care about where they were.
 suspectLocation(C, S) :-
-	member(S, suspects),		% S and T are both suspects
-	member(T, suspects),
-	S \= T,						% S and T are two different suspects
+	inList(S),					% S and T are both suspects
+	inList(T),
+	S \= T,						% S and T are two different people
 	inconsistentTestimony(S),
-	claimedLocation(T, S, C).
+	consistentTestimony(T),
+	claimedLocation(T, S, L),
+	location(C, L).
 
-% Determines whether the evidence found at the crime is associated with the suspects
+% Determines whether the evidence found at the crime is associated with the suspect.
+% S and T could be same person. ie if someone associates evidence found at crime scene 
+% with themselves.
 evidenceMatchesToken(C, S) :-
+	inList(T),
+	testimony(T, suspectToken(S, X)),		% getting token(X) associated w/ suspect 
+	crimeSceneEvidence(C, X).				% was token found at crime scene?
 
 % Determines whether or not the suspects testimony is inconsistent.
+% THIS FUNCTION INFLUENCED HEAVILY BY SITED AUTHOR
 inconsistentTestimony(S) :-
+	inList(S),
+	inList(T),
+	S \= T,
+	testimony(S, SX),
+	testimony(T, TX),
+	inconsistent(SX, TX).
 
 % Determines whether or nor the suspects testimony is consistent.
 consistentTestimony(S) :- \+ inconsistentTestimony(S).
@@ -153,3 +198,15 @@ guilty(C, S) :-
 	suspectLocation(C, S),
 	evidenceMatchesToken(C, S),
 	inconsistentTestimony(S).
+
+% ==================================================================================== %
+
+% What to run / interact with
+% perhaps upgrade to have more interface with user? ie. displays list of crimes, list
+% of suspects, some sample testimonies...
+
+% make this so it outputs who committed crime
+
+crimeSolver(C, X, _, _) :- guilty(C, X).
+crimeSolver(C, _, Y, _) :- guilty(C, Y).
+crimeSolver(C, _, _, Z) :- guilty(C, Z).
