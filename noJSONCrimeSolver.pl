@@ -231,7 +231,13 @@ listOfCrimes :-
 	write("crime6: Mischief").
 
 % Given a crime, gives information on the crime
-crimeDetails(crime1).
+crimeDetails(CrimeName) :-
+	string_concat(CrimeName,'.json', FileName),
+	open(FileName, read, StrOut),
+	json_read(StrOut, X),
+	X = json(X1),
+	X1 = [TYPE, YEAR, MONTH, DAY, HOUR, MINUTE, ADDRESS, NEIGHBOURHOOD],
+	print(X1).
 
 % Gives list of suspects
 listOfSuspects :-
