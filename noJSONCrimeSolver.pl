@@ -224,43 +224,30 @@ crimeSolver(C, _, _, Z) :- guilty(C, Z).
 
 
 
-readX(FileName) :-
-	open(FileName, read, StrOut),
+readX :-
+	open('CRIMES.json',read,StrOut),
 	json_read(StrOut, X),
 	X = json(X1),
-	XI = [TYPE, YEAR, MONTH, DAY, HOUR, MINUTE, ADDRESS, NEIGHBOURHOOD],
 	printX1(X1).
 
 	
+getCrime([]).
+getCrime(Crime) :-
+	Crime = json([Type, Year, Month,Day,Hour, Minute, Address, Neighbourhood]),
+	print(Type).
 
 
-
+	
 % 	H: crime 1=json([type=break and enter,year=2018,month=05,day=04,hour=05,minute=46,address=22XX spruce st,neighbourhood=fairview])
 	
 printX1([]).
-printX1([TYPE, YEAR, MONTH, DAY, HOUR, MINUTE, ADDRESS, NEIGHBOURHOOD]) :- 
-	write(TYPE),
+printX1([H|T]) :- 
+	%Field = 'type',
+%	member('crime 1', H),
+	write(H),
 	nl,
 	nl,
-	write(YEAR),
-	nl,
-	nl,
-	write(MONTH),
-	nl,
-	nl,
-	write(DAY),
-	nl,
-	nl,write(HOUR),
-	nl,
-	nl,write(MINUTE),
-	nl,
-	nl,write(ADDRESS),
-	nl,
-	nl,
-	write(NEIGHBOURHOOD),
-	nl,
-	nl.
-	%printX1(T).
+	printX1(T).
 	
 /**
 findType(X,Json):-
