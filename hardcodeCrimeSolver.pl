@@ -1,6 +1,7 @@
 :- use_module(library(http/json)).
 :- use_module(library(http/json_convert)).
 :- use_module(library(http/http_json)).
+:- use_module(library(lists)).
 
 
 % Based off of Anniepoos "detectivepuzzle" and "newdetective" programs.
@@ -32,8 +33,8 @@
 % Ive never committed a crime in my life and theres no way Id start now; 
 % I saw Juniper and Fern driving around the Central Business District that day though.
 
-claimedLocation(a, j, centralBusinessDistrict).
-claimedLocation(a, f, centralBusinessDistrict).
+claimedLocation(a, j,  neighbourhood='central business district').
+claimedLocation(a, f,  neighbourhood='central business district').
 testimony(a, cleanRecord(a)).
 
 % Briar:
@@ -42,23 +43,23 @@ testimony(a, cleanRecord(a)).
 % comes in here all the time, but I havent seen her in a while. The last time she was in,
 % she bought a ski mask which was kind of weird.
 
-claimedLocation(b, b, strathcona).
-claimedLocation(b, i, strathcona).
+claimedLocation(b, b,  neighbourhood='strathcona').
+claimedLocation(b, i,  neighbourhood='strathcona').
 testimony(b, suspectToken(h, faceMask)).
 
 % Cherry:
 % I was visiting my aunt in Dunbar that day! Juniper or Ginger mightve done it though;
 % theyve both really been hurting for cash lately.
 
-claimedLocation(c, c, dunbarSouthlands).
+claimedLocation(c, c,  neighbourhood='dunbarsouthlands').
 testimony(c, poor(j)).
 testimony(c, poor(g)).
 
 % Daisy:
 % I know Holly hated the victim, and shes so tempermental. I was busy that day trying out my
-% new hiking boots at my home in the Fairview neighborhood anyways.
+% new hiking boots at my home in the Fairview neighbourhood anyways.
 
-claimedLocation(d, d, fairview).
+claimedLocation(d, d, neighbourhood='fairview').
 testimony(d, enemy(h)).
 testimony(d, temper(h)).
 testimony(d, suspectToken(d, hikingBootPrints)).
@@ -68,8 +69,8 @@ testimony(d, suspectToken(d, hikingBootPrints)).
 % know Cherrys always hanging around Killarney too. Come to think of it though, I rode the 
 % bus with Holly that day around Dunbar. Where did you say the crime happened again?
 
-claimedLocation(e, h, dunbarSouthlands).
-claimedLocation(e, c, killarney).
+claimedLocation(e, h, neighbourhood='dunbarsouthlands').
+claimedLocation(e, c, neighbourhood='killarney').
 testimony(e, priorConvict(h)).
 testimony(e, priorConvict(g)).
 
@@ -78,8 +79,8 @@ testimony(e, priorConvict(g)).
 % all day and just tired and aggravated when I got home. Its a shame though, Juniper told 
 % me she forgot her scarf and her mitts at Seymour that day.
 
-claimedLocation(f, j, outOfTown).
-claimedLocation(f, f, outOfTown).
+claimedLocation(f, j, neighbourhood='outOfTown').
+claimedLocation(f, f, neighbourhood='outOfTown').
 testimony(f, suspectToken(f, skiPoles)).
 testimony(f, suspectToken(j, redScarf)).
 testimony(f, temper(f)).
@@ -89,7 +90,7 @@ testimony(f, temper(f)).
 % at the bakery in Fairview that day, she was trying a bunch of different cakes for her 
 % wedding. 
 
-claimedLocation(g, d, fairview).
+claimedLocation(g, d, neighbourhood='fairview').
 testimony(g, suspectToken(c, cakeCrumbs)).
 testimony(g, suspectToken(g, cakeCrumbs)).
 
@@ -152,16 +153,29 @@ crimeSceneEvidence(crime6, dirtyFingerPrints).
 
 % Location of each crime 
 % TO BE REPLACED WITH PARSED DATA ?????
-location(crime1, fairview).
-location(crime2, centralBusinessDistrict).
-location(crime3, killarney).
-location(crime4, centralBusinessDistrict).
-location(crime5, dunbarSouthlands).
-location(crime6, strathcona).
+
+% try these clauses:
+%location('crime1', neighbourhood='fairview').
+%location('crime2', neighbourhood='central business district').
+%location('crime3', neighbourhood='killarney').
+%location('crime4', neighbourhood='central business district').
+%location('crime5', neighbourhood='dunbar southlands').
+%location('crime6', neighbourhood='strathcona').
+
+location(CrimeName, Neighbourhood) :-
+	string_concat(CrimeName,'.json', FileName),
+	open(FileName, read, StrOut),
+	json_read(StrOut, X),
+	X = json(X1),
+	X1 = [TYPE, YEAR, MONTH, DAY, HOUR, MINUTE, ADDRESS, NEIGHBOURHOOD],
+	Hood = NEIGHBOURHOOD,
+	write(Hood),
+	nl,
+	write(Neighbourhood),
+	==(Hood, Neighbourhood).
 
 
 % ALSO TO ADD: address, year, month, day, hour, minute
-
 
 % ==================================================================================== %
 
@@ -222,66 +236,30 @@ crimeSolver(C, X, _, _) :- guilty(C, X).
 crimeSolver(C, _, Y, _) :- guilty(C, Y).
 crimeSolver(C, _, _, Z) :- guilty(C, Z).
 
-
-
-readX(FileName) :-
-	open(FileName, read, StrOut),
+readX(CrimeName, Fact) :-
+	string_concat(CrimeName,'.json', FileName),
+	open('crime1.json', read, StrOut),
 	json_read(StrOut, X),
 	X = json(X1),
-	XI = [TYPE, YEAR, MONTH, DAY, HOUR, MINUTE, ADDRESS, NEIGHBOURHOOD],
-	printX1(X1).
-
+	X1 = [TYPE, YEAR, MONTH, DAY, HOUR, MINUTE, ADDRESS, NEIGHBOURHOOD],
+	%write(YEAR),
+	%nl,
+	%print(YEAR),
+	%nl,
+	%write(Fact),
+	==(YEAR, Fact).
 	
+	% facts are written out as year='2018'
+	
+	
+	% uncomment if we  want to print out all values
+	% printX1(X1).
 
-
-
-% 	H: crime 1=json([type=break and enter,year=2018,month=05,day=04,hour=05,minute=46,address=22XX spruce st,neighbourhood=fairview])
 	
 printX1([]).
-printX1([TYPE, YEAR, MONTH, DAY, HOUR, MINUTE, ADDRESS, NEIGHBOURHOOD]) :- 
-	write(TYPE),
+printX1([H|T]) :- 
+	write(H),
 	nl,
 	nl,
-	write(YEAR),
-	nl,
-	nl,
-	write(MONTH),
-	nl,
-	nl,
-	write(DAY),
-	nl,
-	nl,write(HOUR),
-	nl,
-	nl,write(MINUTE),
-	nl,
-	nl,write(ADDRESS),
-	nl,
-	nl,
-	write(NEIGHBOURHOOD),
-	nl,
-	nl.
-	%printX1(T).
-	
-/**
-findType(X,Json):-
-    Field = 'year',
-    atomic_list_concat(X, ',', Atom),
-    uri_query_components(QS, [t=Atom]) %t is the title of the movie
-    format(atom(HREF),'http://www.omdbapi.com/?~s',[QS]),
-    http_get(HREF,json(Json), []),   %json(Json) converts it to Prolog terms.
-   
-    member(Field=Result,Json),    %Result will get the value of 'Year'
-    write(Result).
-**/
-
-
-
-
-
-
-
-
-
-
-
+	printX1(T).
 
