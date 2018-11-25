@@ -211,6 +211,6 @@ guilty(C, S) :-
 
 % make this so it outputs who committed crime
 
-crimeSolver(C, X, _, _) :- guilty(C, X).
-crimeSolver(C, _, Y, _) :- guilty(C, Y).
-crimeSolver(C, _, _, Z) :- guilty(C, Z).
+crimeSolver(C, X, _, _) :- guilty(C, X), write (X).
+crimeSolver(C, _, Y, _) :- guilty(C, Y), write (Y).
+crimeSolver(C, _, _, Z) :- guilty(C, Z), write (Z).
