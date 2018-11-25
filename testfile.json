@@ -1,9 +1,1 @@
-{ "name":"Demo term",
-  "created": {
-    "day":null,
-    "month":"December",
-    "year":2007
-  },
-  "confirmed":true,
-  "members":[1,2,3]
-}.
+crime 1:{type:break and enter,year:2018,month:05,day:04,hour:05,minute:46,address:22XX spruce st,neighbourhood:fairview}ce st","neighbourhood":"fairview"}.
