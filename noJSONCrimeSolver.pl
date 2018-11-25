@@ -1,8 +1,3 @@
-:- use_module(library(http/json)).
-:- use_module(library(http/json_convert)).
-:- use_module(library(http/http_json)).
-
-
 % Based off of Anniepoos "detectivepuzzle" and "newdetective" programs.
 % https://github.com/Anniepoo/prolog-examples/blob/master/newdetective.pl
 % https://github.com/Anniepoo/prolog-examples/blob/master/detectivepuzzle.pl
@@ -15,9 +10,7 @@
 
 % Outline of crimes
 
-
-% CAN ALSO PARSE CRIME TYPE
-% crime1: Break and Enter Residential/Other				%/
+% crime1: Break and Enter Residential/Other				
 % crime2: Theft from Vehicle
 % crime3: Mischief
 % crime4: Other Theft
@@ -221,54 +214,3 @@ guilty(C, S) :-
 crimeSolver(C, X, _, _) :- guilty(C, X).
 crimeSolver(C, _, Y, _) :- guilty(C, Y).
 crimeSolver(C, _, _, Z) :- guilty(C, Z).
-
-
-
-readX :-
-	open('CRIMES.json',read,StrOut),
-	json_read(StrOut, X),
-	X = json(X1),
-	printX1(X1).
-
-	
-getCrime([]).
-getCrime(Crime) :-
-	Crime = json([Type, Year, Month,Day,Hour, Minute, Address, Neighbourhood]),
-	print(Type).
-
-
-	
-% 	H: crime 1=json([type=break and enter,year=2018,month=05,day=04,hour=05,minute=46,address=22XX spruce st,neighbourhood=fairview])
-	
-printX1([]).
-printX1([H|T]) :- 
-	%Field = 'type',
-%	member('crime 1', H),
-	write(H),
-	nl,
-	nl,
-	printX1(T).
-	
-/**
-findType(X,Json):-
-    Field = 'year',
-    atomic_list_concat(X, ',', Atom),
-    uri_query_components(QS, [t=Atom]) %t is the title of the movie
-    format(atom(HREF),'http://www.omdbapi.com/?~s',[QS]),
-    http_get(HREF,json(Json), []),   %json(Json) converts it to Prolog terms.
-   
-    member(Field=Result,Json),    %Result will get the value of 'Year'
-    write(Result).
-**/
-
-
-
-
-
-
-
-
-
-
-
-
