@@ -206,11 +206,64 @@ guilty(C, S) :-
 % ==================================================================================== %
 
 % What to run / interact with
-% perhaps upgrade to have more interface with user? ie. displays list of crimes, list
-% of suspects, some sample testimonies...
-
-% make this so it outputs who committed crime
 
 crimeSolver(C, X, _, _) :- guilty(C, X), write (X).
 crimeSolver(C, _, Y, _) :- guilty(C, Y), write (Y).
 crimeSolver(C, _, _, Z) :- guilty(C, Z), write (Z).
+
+% Show list of crimes and testimonies.
+begin :- 
+	write("To solve a crime, type 'crimeSolver(C, S1, S2, S3)', where C is the crime code,"), nl,
+	write("and S1-S3 are 3 suspect codes. For more information:"), nl, nl,
+	write("listOfCrimes. - Full list of crimes"), nl,
+	write("crimeDetails(C). - Details on given crime"), nl,
+	write("listOfSuspects. - Full list of suspects"), nl,
+	write("suspectDetails(S) - Testimony of a given suspect").
+
+
+% Gives a list of crimes
+listOfCrimes :-
+	write("crime1: Break and Enter Residential/Other"), nl,
+	write("crime2: Theft from Vehicle"), nl,
+	write("crime3: Mischief"), nl,
+	write("crime4: Other Theft"), nl,
+	write("crime5: Homicide"), nl,
+	write("crime6: Mischief").
+
+% Given a crime, gives information on the crime
+crimeDetails(crime1).
+
+% Gives list of suspects
+listOfSuspects :-
+	write("Alder: a"), nl,
+	write("Briar: b"), nl,
+	write("Cherry: c"), nl,
+	write("Daisy: d"), nl,	
+	write("Erica: e"), nl,
+	write("Fern: f"), nl,
+	write("Ginger: g"), nl,
+	write("Holly: h"), nl,	
+	write("Iris: i"), nl,
+	write("Juniper: j").	
+
+% Testimony of given suspect
+suspectDetails(a) :-
+	write("Alder (Code 'a'): I've never committed a crime in my life and there's no way I'd start now; I saw Juniper and Fern driving around the Central Business District that day though.").
+suspectDetails(b) :-
+	write("Briar (Code 'b'): I work in a shop in Strathcona, so I was working the whole time that the crime was committed. Actually, Iris came in that day, but I can't remember what she bought. Holly comes in here all the time, but I haven't seen her in a while. The last time she was in, she bought a ski mask which was kind of weird.").
+suspectDetails(c) :-
+	write("Cherry (Code 'c'): I was visiting my aunt in Dunbar that day! Juniper or Ginger might've done it though; they've both really been hurting for cash lately.").
+suspectDetails(d) :-	
+	write("Daisy (Code 'd'): I know Holly hated the victim, and she's so tempermental. I was busy that day trying out my new hiking boots at my home in the Fairview neighborhood anyways.").
+suspectDetails(e) :-	
+	write("Erica (Code 'e'): If you ask me, it was either Cherry or Holly, they both already have a criminal record. I know Cherry's always hanging around Killarney too. Come to think of it though, I rode the bus with Holly that day around Dunbar. Where did you say the crime happened again?").
+suspectDetails(f) :-	
+	write("Fern (Code 'f'): I couldn't have done it; Juniper and I both went skiing that day, so I was on the mountain all day and just tired and aggravated when I got home. It's a shame though, Juniper told me she forgot her scarf and her mitts at Seymour that day.").
+suspectDetails(g) :-	
+	write("Ginger (Code 'g'): I promise I didn't do it, and I don't think Daisy could've done it either. I ran into her at the bakery in Fairview that day, she was trying a bunch of different cakes for her wedding.").
+suspectDetails(h) :-	
+	write("Holly (Code 'h'): The victim and I were great friends, I'm so sorry this happened to them. Maybe you should ask Iris, I know she and the victim had some bad blood between them. I saw her that day too, and she had dirt all over her hands. So gross.").
+suspectDetails(i) :-	
+	write("Iris (Code 'i'): I have no idea what you guys are talking about. I was out of town when it happened, and I don't even know who the victim is!").
+suspectDetails(j) :-	
+	write("Juniper (Code 'j'): I bet it was Erica. She's always threatening to do something like that, you know how money troubles makes people do extreme things. I make way too much to do something petty like that, and I was out having a fantastic day with Fern.").
