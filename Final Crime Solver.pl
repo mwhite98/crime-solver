@@ -3,7 +3,6 @@
 :- use_module(library(http/http_json)).
 :- use_module(library(lists)).
 
-
 % Based off of Anniepoos "detectivepuzzle" and "newdetective" programs.
 % https://github.com/Anniepoo/prolog-examples/blob/master/newdetective.pl
 % https://github.com/Anniepoo/prolog-examples/blob/master/detectivepuzzle.pl
@@ -16,22 +15,20 @@
 
 % Outline of crimes
 
-% CAN ALSO PARSE CRIME TYPE
-% crime1: Break and Enter Residential/Other				%/
+% crime1: Break and Enter Residential/Other
 % crime2: Theft from Vehicle
 % crime3: Mischief
 % crime4: Other Theft
 % crime5: Homicide
 % crime6: Mischief
 
-% currently 6 crimes supported:
-% crime1 - d is guilty
-% crime2 - j is guilty
-% crime3 - c is guilty
-% crime4 - f is guilty
-% crime5 - h is guilty
-% crime6 - i is guilty
-
+% Guilty of each crime
+% crime1 - Daisy (d)
+% crime2 - Juniper (j)
+% crime3 - Cherry (c)
+% crime4 - Fern (f)
+% crime5 - Holly (h)
+% crime6 - Iris (i)
 
 % ==================================================================================== %
 
@@ -195,7 +192,6 @@ date(CrimeName, Y, M, D) :-
 	==(MONTH, M),
 	==(DAY, D).
 
-
 % ==================================================================================== %
 
 % Functions to evaluate evidence, testimonies, and verdict
@@ -204,7 +200,7 @@ date(CrimeName, Y, M, D) :-
 inList(X) :- suspects(L), member(X, L).
 
 % Determines whether the actual location of the suspect matches the scene of the crime
-% Does NOT avaluate to true if suspect has a consistent testimony. If a suspects testimony
+% Does NOT evaluate to true if suspect has a consistent testimony. If a suspects testimony
 % is consistent, we dont really care about where they were.
 suspectLocation(C, S) :-
 	inList(S),					% S and T are both suspects
@@ -246,10 +242,6 @@ guilty(C, S) :-
 % ==================================================================================== %
 
 % What to run / interact with
-% perhaps upgrade to have more interface with user? ie. displays list of crimes, list
-% of suspects, some sample testimonies...
-
-% make this so it outputs who committed crime
 
 crimeSolver(C, X, _, _) :- 
 	guilty(C, X),
